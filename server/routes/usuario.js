@@ -7,7 +7,7 @@ const { verificaToken, verificaAdmin_Role } = require('../middlewares/autenticac
 const app = express();
 
 
-app.get('/usuario', verificaToken , (req, res) => {
+app.get('/usuario', verificaToken, (req, res) => {
 
     /* return res.json({
         usuario: req.usuario,
@@ -21,48 +21,48 @@ app.get('/usuario', verificaToken , (req, res) => {
     let limite = req.query.limite || 5;
     limite = Number(limite);
 
-    Usuario.find({estado:true}, 'nombre email role estado google img')
-    .skip(desde)
-    .limit(limite)
-    .exec( (err, usuarios) => {
+    Usuario.find({ estado: true }, 'nombre email role estado google img')
+        .skip(desde)
+        .limit(limite)
+        .exec((err, usuarios) => {
 
-        if(err) {
-            return res.status(400).json({
-                 ok: false,
-                 err: err
-             })
-         }
+            if (err) {
+                return res.status(400).json({
+                    ok: false,
+                    err: err
+                })
+            }
 
-         Usuario.count({estado:true}, (err, conteo) => {
-            res.json({
-                ok:true,
-                usuarios: usuarios,
-                count: conteo
-            });
-         })
+            Usuario.count({ estado: true }, (err, conteo) => {
+                res.json({
+                    ok: true,
+                    usuarios: usuarios,
+                    count: conteo
+                });
+            })
 
-      
 
-    } )
+
+        })
 
 
 });
 
-app.post('/usuario', [verificaToken, verificaAdmin_Role] , function(req, res) {
+app.post('/usuario', [verificaToken, verificaAdmin_Role], function(req, res) {
 
     let body = req.body;
 
     let usuario = new Usuario({
         nombre: body.nombre,
         email: body.email,
-        password: bcrypt.hashSync(body.password,10),
+        password: bcrypt.hashSync(body.password, 10),
         role: body.role
     });
 
-    usuario.save( (err, usuarioDB) => {
+    usuario.save((err, usuarioDB) => {
 
-        if(err) {
-           return res.status(400).json({
+        if (err) {
+            return res.status(400).json({
                 ok: false,
                 err: err
             })
@@ -78,44 +78,44 @@ app.post('/usuario', [verificaToken, verificaAdmin_Role] , function(req, res) {
     });
 
 
- /*    if ( body.nombre === undefined) {
-        res.status(400).json({
-            ok: false,
-            message: 'required name'
-        });
-    }else {
-        res.json({
-            persona : body
-        });
-    } */
+    /*    if ( body.nombre === undefined) {
+           res.status(400).json({
+               ok: false,
+               message: 'required name'
+           });
+       }else {
+           res.json({
+               persona : body
+           });
+       } */
 
 
 });
 
-app.put('/usuario/:id',  [verificaToken, verificaAdmin_Role]  , function (req, res)  {
+app.put('/usuario/:id', [verificaToken, verificaAdmin_Role], function(req, res) {
 
     let id = req.params.id; // param url
-    let body = _.pick (req.body,['nombre','email','img','role','estado']); //body form 
+    let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']); //body form 
 
-   /*  delete body.password;
-    delete body.google; */
+    /*  delete body.password;
+     delete body.google; */
 
-     Usuario.findByIdAndUpdate(id, body,{new: true, runValidators: true}, (err, usuarioDB) => {
+    Usuario.findByIdAndUpdate(id, body, { new: true, runValidators: true }, (err, usuarioDB) => {
 
-        if(err) {
+        if (err) {
             return res.status(400).json({
-                 ok: false,
-                 err: err
-             })
-         }
- 
- 
-         res.json({
-             ok: true,
-             usuario: usuarioDB
-         });
+                ok: false,
+                err: err
+            })
+        }
 
-      
+
+        res.json({
+            ok: true,
+            usuario: usuarioDB
+        });
+
+
     })
 
     /* res.json({
@@ -124,60 +124,60 @@ app.put('/usuario/:id',  [verificaToken, verificaAdmin_Role]  , function (req, r
 
 });
 
-app.delete('/usuario2077/:id',verificaToken , function(req, res) {
+app.delete('/usuario2077/:id', verificaToken, function(req, res) {
 
     let id = req.params.id;
 
     //Schema
     Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
 
-        if(err) {
+        if (err) {
             return res.status(400).json({
-                 ok: false,
-                 err: err
-             });
-         }
- 
-         if(!usuarioBorrado ) {
+                ok: false,
+                err: err
+            });
+        }
+
+        if (!usuarioBorrado) {
             return res.status(400).json({
                 ok: false,
                 err: {
                     message: 'user not found'
                 }
             });
-         }
- 
-         res.json({
-             ok: true,
-             usuario: usuarioBorrado
-         });
+        }
+
+        res.json({
+            ok: true,
+            usuario: usuarioBorrado
+        });
 
 
     });
 
 });
 
-app.delete('/usuario/:id', [verificaToken, verificaAdmin_Role]  , function(req, res) {
+app.delete('/usuario/:id', [verificaToken, verificaAdmin_Role], function(req, res) {
 
     let id = req.params.id; // param url
     const userObj = {
-        estado : false
-        };
+        estado: false
+    };
 
-     //Usuario.findByIdAndUpdate(id, {$set: {  estado: false } }, {new : true} , (err, usuarioDB) => {
-     Usuario.findByIdAndUpdate(id,userObj, {new : true} , (err, usuarioDB) => {
+    //Usuario.findByIdAndUpdate(id, {$set: {  estado: false } }, {new : true} , (err, usuarioDB) => {
+    Usuario.findByIdAndUpdate(id, userObj, { new: true }, (err, usuarioDB) => {
 
-        if(err) {
+        if (err) {
             return res.status(400).json({
-                 ok: false,
-                 err: err
-             })
-         }
- 
-         res.json({
-             ok: true,
-             usuario: usuarioDB
-         });
+                ok: false,
+                err: err
+            })
+        }
+
+        res.json({
+            ok: true,
+            usuario: usuarioDB
+        });
     })
 
 });

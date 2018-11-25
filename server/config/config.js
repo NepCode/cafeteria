@@ -16,7 +16,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 //60 mins
 //24 hrs
 //30d ias
-process.env.EXPIRATION_DATE = 60 * 60 * 24 * 30;
+process.env.EXPIRATION_DATE = '48h';
 
 // ============================
 //  Auth seed
@@ -28,7 +28,7 @@ process.env.AUTH_SEED = process.env.AUTH_SEED || 'este-es-el-seed-desarrollo';
 //  MongoDB
 // ============================
 let urlDB;
-if(process.env.NODE_ENV === 'dev') {
+if (process.env.NODE_ENV === 'dev') {
     urlDB = 'mongodb://localhost:27017/cafe';
 } else {
     urlDB = process.env.MONGO_URI;
