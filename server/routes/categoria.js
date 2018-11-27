@@ -7,7 +7,7 @@ let app = express();
 let Categoria = require('../models/categoria');
 
 // ============================
-// Mostrar todas las categorias con paginación
+// get categories with pagination
 // ============================
 app.get('/categoriaP', verificaToken, (req, res) => {
 
@@ -69,7 +69,7 @@ app.get('/categoria', verificaToken, (req, res) => {
 });
 
 // ============================
-// Mostrar una categoria por ID
+// get just one category by id 
 // ============================
 app.get('/categoria/:id', verificaToken, (req, res) => {
     // Categoria.findById(....);
@@ -86,10 +86,10 @@ app.get('/categoria/:id', verificaToken, (req, res) => {
         }
 
         if (!categoriaDB) {
-            return res.status(500).json({
+            return res.status(400).json({
                 ok: false,
                 err: {
-                    message: 'El ID no es correcto'
+                    message: 'this category does not exist'
                 }
             });
         }
@@ -106,7 +106,7 @@ app.get('/categoria/:id', verificaToken, (req, res) => {
 });
 
 // ============================
-// Crear nueva categoria
+// create category  categoria
 // ============================
 app.post('/categoria', verificaToken, (req, res) => {
     // regresa la nueva categoria
@@ -151,7 +151,7 @@ app.post('/categoria', verificaToken, (req, res) => {
 // ============================
 app.put('/categoria/:id', verificaToken, (req, res) => {
 
-    let id = req.params.id;
+    let id = req.params.id; //param url
     let body = req.body;
 
     let descCategoria = {
@@ -188,8 +188,8 @@ app.put('/categoria/:id', verificaToken, (req, res) => {
 // delete category
 // ============================
 app.delete('/categoria/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
-    // solo un administrador puede borrar categorias
-    // Categoria.findByIdAndRemove
+     //just admin can do this
+    //Categoria.findByIdAndRemove
     let id = req.params.id;
 
     Categoria.findByIdAndRemove(id, (err, categoriaDB) => {
@@ -205,14 +205,14 @@ app.delete('/categoria/:id', [verificaToken, verificaAdmin_Role], (req, res) => 
             return res.status(400).json({
                 ok: false,
                 err: {
-                    message: 'El id no existe'
+                    message: 'category not found'
                 }
             });
         }
 
         res.json({
             ok: true,
-            message: 'Categoria Borrada'
+            message: 'Categoria deleted'
         });
 
     });

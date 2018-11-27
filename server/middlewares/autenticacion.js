@@ -28,7 +28,7 @@ let verificaToken = (req, res, next) => {
 
 
 // ============================
-//  check role
+//  check admin role
 // ============================
 let verificaAdmin_Role = (req, res, next) => {
 
@@ -47,15 +47,38 @@ let verificaAdmin_Role = (req, res, next) => {
     });
 
 }
-
-
-
-
 };
+
+
+// ============================
+//  check token img
+// ============================
+let verificaTokenImg = (req, res, next) => {
+
+    let token = req.query.token;
+
+    jwt.verify(token, process.env.AUTH_SEED, (err, decoded) => {
+
+        if(err) {
+            return res.status(401).json({
+                ok: false,
+                err: {
+                    message: 'invalid token'
+                }
+            });
+        }
+
+        req.usuario = decoded.usuario;
+        next();
+    });
+};
+
+
 
 module.exports = {
     verificaToken,
-    verificaAdmin_Role
+    verificaAdmin_Role,
+    verificaTokenImg
 }
 
 //module.exports.verificaToken = (req, res, next) => {
